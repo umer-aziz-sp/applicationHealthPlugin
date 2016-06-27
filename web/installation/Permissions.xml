@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+    <SPRight displayName="ApplicationHealthPluginRestServiceAllow" name="ApplicationHealthPluginRestServiceAllow">
+        <Description>Allow access to Application Health Plugin REST Service</Description>
+    </SPRight>
+
+    <Capability displayName="ApplicationHealthPluginRestServiceAccess" name="ApplicationHealthPluginRestServiceAccess">
+        <Description>Allow access to Application Health Plugin REST Service</Description>
+        <RightRefs>
+            <Reference class="sailpoint.object.SPRight" name="ApplicationHealthPluginRestServiceAllow"/>
+        </RightRefs>
+    </Capability>
+
+    <SPRight displayName="ApplicationHealthPluginRight" name="ApplicationHealthPluginRight">
+        <Description>Access to use the Application Health Plugin</Description>
+    </SPRight>
+
+    <SPRight displayName="ApplicationHealthPluginIconRight" name="ApplicationHealthPluginIconRight">
+        <Description>Access to see (load) the Application Health Plugin header inject snippet</Description>
+    </SPRight>
+
+    <Capability displayName="ApplicationHealthPluginCapability" name="ApplicationHealthPluginCapability">
+        <Description>Allow access to Hello World Plugin</Description>
+        <RightRefs>
+            <Reference class="sailpoint.object.SPRight" name="ApplicationHealthPluginRight"/>
+            <Reference class="sailpoint.object.SPRight" name="ApplicationHealthPluginIconRight"/>
+        </RightRefs>
+    </Capability>
+
+</sailpoint>
+

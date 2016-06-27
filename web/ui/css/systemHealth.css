@@ -1,0 +1,33 @@
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+.healthOK {
+    color: #AAFFAA;
+}
+
+.healthWARN {
+	color: orange;
+	animation: blink-animation 1.5s steps(10, start) infinite;
+	-webkit-animation: blink-animation 1.5s steps(10, start) infinite;
+}
+
+.healthERROR {
+	color: red;
+	animation: blink-animation 1.5s steps(10, start) infinite;
+	-webkit-animation: blink-animation 1.5s steps(10, start) infinite;
+}
+
+.healthUNKNOWN {
+	color: grey;
+}
+
+
+
