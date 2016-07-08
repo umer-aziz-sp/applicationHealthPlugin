@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS app_health_data (
-  id VARCHAR(128) not null,
+  name VARCHAR(256) not null,
+  type VARCHAR(256) not null,
   status VARCHAR(128),
+  lastcheck TIMESTAMP,
   message VARCHAR(1024),
-  PRIMARY KEY (id)
+  PRIMARY KEY (name)
 );

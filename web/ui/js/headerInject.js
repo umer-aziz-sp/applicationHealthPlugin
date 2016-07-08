@@ -1,5 +1,3 @@
-//<script src="ui/js/jquery.min.js"></script>
-
 /*
 
 Other available values to build paths, etc. that are obtained from the server and set in the PluginFramework JS object
@@ -13,31 +11,44 @@ PluginFramework.CsrfToken = Ext.util.Cookies.get('CSRF-TOKEN');
  */
 
 
-var hostsUrl = SailPoint.CONTEXT_PATH + '/systemSetup/hostConfig.jsf?forceLoad=true';
+var appStatusUrl = SailPoint.CONTEXT_PATH + '/systemSetup/hostConfig.jsf?forceLoad=true'; // *TODO*
 var jQueryClone = jQuery;
 jQuery(document).ready(function(){
 
 	jQuery("ul.navbar-right li:first")
 		.before(
 				'<li class="dropdown">' +
-				'		<a href="' + hostsUrl + '" tabindex="0" role="menuitem" data-snippet-debug="off">' +
-				'			<i id="systemHealthStatusIcon" role="presenation" class="fa fa-heart fa-lg healthUNKNOWN"></i>' +
+				'		<a href="' + appStatusUrl + '" tabindex="0" role="menuitem" data-snippet-debug="off">' +
+				'			<i id="appHealthStatusIcon" role="presenation" class="fa fa-refresh fa-spin fa-lg healthUNKNOWN"></i>' +
 				'		</a>' +
 				'</li>'
 		);
 	
+    jQueryClone.ajax({
+        method: "GET",
+        beforeSend: function (request) {
+            request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+        },
+        url: SailPoint.CONTEXT_PATH + "/plugin/applicationhealthplugin/getStatus"
+    })
+    .done(function (msg) {
+        healthstatus = msg._status;
+        statusClass = 'health' + healthstatus;
+	    document.getElementById("appHealthStatusIcon").className = 'fa fa-refresh fa-spin fa-lg ' + statusClass;
+    });
+
 	setInterval(function(){
 	    jQueryClone.ajax({
 	        method: "GET",
 	        beforeSend: function (request) {
 	            request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
 	        },
-	        url: SailPoint.CONTEXT_PATH + "/plugin/systemhealthplugin/getStatus"
+	        url: SailPoint.CONTEXT_PATH + "/plugin/applicationhealthplugin/getStatus"
 	    })
 	    .done(function (msg) {
 	        healthstatus = msg._status;
 	        statusClass = 'health' + healthstatus;
-		    document.getElementById("systemHealthStatusIcon").className = 'fa fa-heart fa-lg ' + statusClass;
+		    document.getElementById("appHealthStatusIcon").className = 'fa fa-refresh fa-spin fa-lg ' + statusClass;
 	    });
 	
 	
