@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+	<ServiceDefinition interval="120" hosts="global"
+		executor="sailpoint.plugin.server.PluginServiceExecutor" name="ApplicationHealthService">
+		<Description>
+			A Service to check application status
+		</Description>
+		<Attributes>
+			<Map>
+				<entry key='pluginUniqueName' value='applicationhealthplugin' />
+				<entry key='implementationClass' value='sailpoint.plugin.applicationhealthplugin.server.ApplicationHealthService' />
+			</Map>
+		</Attributes>
+	</ServiceDefinition>
+</sailpoint>  

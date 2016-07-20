@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC
+        "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:sp="http://sailpoint.com/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:t="http://myfaces.apache.org/tomahawk">
+<body>
+
+<ui:composition>
+
+  <ui:define name="title">Application Health Status</ui:define>
+  
+  <div id="applicationHealth" style=""></div>
+  <div id="applicationHealthButtons" class="buttonRow">
+    <input id="applicationHealthRefresh" value="Refresh" class="secondaryBtn" type="submit"/>  
+  </div>
+ 
+  <script type="text/javascript">
+  		function setSizes() {
+          $("#applicationHealth").width(($(window).width() - 70) + "px");
+          $("#applicationHealth").css("margin-left", "35px");
+          $("#applicationHealth").css("margin-top", "35px");
+          $("#applicationHealth").height("100%");
+          $("#applicationHealthButtons").css("margin-left", "35px");
+  		}
+  		
+  		function refreshTable() {
+  		  $.ajax({
+            method: "GET",
+            beforeSend: function (request) {
+              request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+            },
+            url: "#{base.requestContextPath}/plugin/applicationhealthplugin/getStatusTable"
+          })
+          .done(function (msg) {
+            $("#applicationHealth").html(msg._status);
+          });
+  		}
+  		
+        $(document).ready(function () {
+          setSizes();
+          refreshTable();
+        });
+        
+        $("#applicationHealthRefresh").click(function() {
+          refreshTable();
+        });
+        
+        $(window).resize(function () {
+          setSizes();          
+        });
+  </script> 
+ 
+</ui:composition>
+
+</body>
+</html>

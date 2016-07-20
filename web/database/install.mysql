@@ -1,8 +1,14 @@
 CREATE TABLE IF NOT EXISTS app_health_data (
+  id VARCHAR(256) not null,
   name VARCHAR(256) not null,
-  type VARCHAR(256) not null,
+  objecttype VARCHAR(256) not null,
   status VARCHAR(128),
   lastcheck TIMESTAMP,
   message VARCHAR(1024),
   PRIMARY KEY (name)
 );
+
+CREATE INDEX app_health_type ON app_health_data(objecttype);
+CREATE INDEX app_health_status ON app_health_data(status);
+CREATE INDEX app_health_id ON app_health_data(id);
+CREATE INDEX app_health_lastcheck ON app_health_data(lastcheck);

@@ -11,7 +11,7 @@ PluginFramework.CsrfToken = Ext.util.Cookies.get('CSRF-TOKEN');
  */
 
 
-var appStatusUrl = SailPoint.CONTEXT_PATH + '/systemSetup/hostConfig.jsf?forceLoad=true'; // *TODO*
+var appStatusUrl = SailPoint.CONTEXT_PATH + '/pluginPage.jsf?pn=applicationhealthplugin';
 var jQueryClone = jQuery;
 jQuery(document).ready(function(){
 

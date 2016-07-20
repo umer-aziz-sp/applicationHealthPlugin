@@ -28,3 +28,54 @@
 .healthUNKNOWN {
 	color: grey;
 }
+
+div#applicationHealth {
+	background-color: white;
+}
+
+table.applicationHealthTable {
+	border-style: solid;
+	border-color: rgb(201, 191, 191);
+	border-width: 1px;
+	width: 100%;
+	padding: 2px;
+}
+
+tr.applicationHealthTable {
+}
+
+tr.x-grid-header-row {
+	font-weight: bold;
+	background-color: rgb(240, 240, 240);
+}
+
+tr.x-grid-row-alt {
+	font-weight: bold;
+	background-color: rgb(240, 240, 240);
+}
+
+
+td.applicationHealthTable {
+	border-style: solid;
+	border-color: rgb(102, 102, 102);
+	border-width: 0.25px;
+	margin: 2px;
+	padding: 5px;
+	color: rgb(102,102,102);
+}
+
+th.applicationHealthTable {
+	border-style: solid;
+	border-color: rgb(102, 102, 102);
+	border-width: 0.25px;
+	margin: 2px;
+	padding: 5px;
+	color: rgb(102,102,102);
+}
+
+div.allOk {
+	height: 350px;
+	background-image: url(../images/AllOK.png);
+	background-position: center;
+	background-repeat: no-repeat;
+}
