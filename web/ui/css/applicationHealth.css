@@ -29,7 +29,7 @@
 	color: grey;
 }
 
-div#applicationHealth {
+div#applicationHealth, div#applicationHealthIgnored {
 	background-color: white;
 }
 

@@ -16,6 +16,7 @@
   <ui:define name="title">Application Health Status</ui:define>
   
   <div id="applicationHealth" style=""></div>
+  <div id="applicationHealthIgnored" style=""></div>
   <div id="applicationHealthButtons" class="buttonRow">
     <input id="applicationHealthRefresh" value="Refresh" class="secondaryBtn" type="submit"/>  
   </div>
@@ -26,10 +27,36 @@
           $("#applicationHealth").css("margin-left", "35px");
           $("#applicationHealth").css("margin-top", "35px");
           $("#applicationHealth").height("100%");
+          $("#applicationHealthIgnored").width(($(window).width() - 70) + "px");
+          $("#applicationHealthIgnored").css("margin-left", "35px");
+          $("#applicationHealthIgnored").css("margin-top", "35px");
+          $("#applicationHealthIgnored").height("100%");
           $("#applicationHealthButtons").css("margin-left", "35px");
   		}
   		
-  		function refreshTable() {
+  		function submitIgnore(objecttype, name) {
+  		  $.ajax({
+            method: "GET",
+            beforeSend: function (request) {
+              request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+            },
+            url: "#{base.requestContextPath}/plugin/applicationhealthplugin/addIgnored/"+objecttype+"/"+name
+          })
+          refreshTables();
+  		}
+  		
+  		function submitUnignore(objecttype, name) {
+  		  $.ajax({
+            method: "GET",
+            beforeSend: function (request) {
+              request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+            },
+            url: "#{base.requestContextPath}/plugin/applicationhealthplugin/removeIgnored/"+objecttype+"/"+name
+          })
+          refreshTables();
+  		}
+  		
+  		function refreshTables() {
   		  $.ajax({
             method: "GET",
             beforeSend: function (request) {
@@ -40,17 +67,28 @@
           .done(function (msg) {
             $("#applicationHealth").html(msg._status);
           });
-  		}
+  		  $.ajax({
+            method: "GET",
+            beforeSend: function (request) {
+              request.setRequestHeader("X-XSRF-TOKEN", PluginFramework.CsrfToken);
+            },
+            url: "#{base.requestContextPath}/plugin/applicationhealthplugin/getIgnoredTable"
+          })
+          .done(function (msg) {
+            $("#applicationHealthIgnored").html(msg._status);
+          });
+   		}
   		
         $(document).ready(function () {
           setSizes();
-          refreshTable();
+          refreshTables();
         });
         
         $("#applicationHealthRefresh").click(function() {
-          refreshTable();
+          refreshTables();
         });
         
+ 
         $(window).resize(function () {
           setSizes();          
         });
