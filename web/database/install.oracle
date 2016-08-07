@@ -1,0 +1,14 @@
+CREATE TABLE app_health_data (
+  id VARCHAR2(128) not null,
+  name VARCHAR2(128) not null,
+  objecttype VARCHAR2(128) not null,
+  status VARCHAR2(128),
+  lastcheck TIMESTAMP,
+  message VARCHAR2(1024)
+);
+
+CREATE INDEX app_health_name ON app_health_data(name);
+CREATE INDEX app_health_type ON app_health_data(objecttype);
+CREATE INDEX app_health_status ON app_health_data(status);
+CREATE INDEX app_health_id ON app_health_data(id);
+CREATE INDEX app_health_lastcheck ON app_health_data(lastcheck);

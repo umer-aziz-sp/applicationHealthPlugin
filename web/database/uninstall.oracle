@@ -1,0 +1,7 @@
+DROP INDEX app_health_name;
+DROP INDEX app_health_type;
+DROP INDEX app_health_status;
+DROP INDEX app_health_id;
+DROP INDEX app_health_lastcheck;
+
+DROP TABLE app_health_data;
