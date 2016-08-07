@@ -1,0 +1,24 @@
+CREATE TABLE app_health_data (
+  [id] [NVARCHAR] (128) NOT NULL,
+  [name] [NVARCHAR] (128) NOT NULL,
+  [objecttype] [NVARCHAR] (128) NOT NULL,
+  [status] [NVARCHAR] (128),
+  [lastcheck] [DATETIME],
+  [message] [NVARCHAR] (1024)
+);
+GO
+
+CREATE INDEX app_health_name ON app_health_data(name);
+GO
+
+CREATE INDEX app_health_type ON app_health_data(objecttype);
+GO
+
+CREATE INDEX app_health_status ON app_health_data(status);
+GO
+
+CREATE INDEX app_health_id ON app_health_data(id);
+GO
+
+CREATE INDEX app_health_lastcheck ON app_health_data(lastcheck);
+GO

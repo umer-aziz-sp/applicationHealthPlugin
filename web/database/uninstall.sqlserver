@@ -1,0 +1,17 @@
+DROP INDEX IF EXISTS app_health_name;
+GO
+
+DROP INDEX IF EXISTS app_health_type;
+GO
+
+DROP INDEX IF EXISTS app_health_status;
+GO
+
+DROP INDEX IF EXISTS app_health_id;
+GO
+
+DROP INDEX IF EXISTS app_health_lastcheck;
+GO
+
+DROP TABLE app_health_data;
+GO
