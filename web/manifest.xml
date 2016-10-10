@@ -11,10 +11,10 @@
 								<entry key="ApplicationHealthPlugin">
 									<value>
 										<Plugin uniqueName="applicationhealthplugin"
-											displayName="Application Health" enabled="true" version="0.0.0.103"
+											displayName="Application Health" enabled="true" version="0.0.0.106"
 											allowDisable="true" visible="true" allowUninstall="true"
-											minFrameworkVersion="0.4.5" maxFrameworkVersion="1.0.0"
-											minUpgradableVersion="0.0.0.1" certificationLevel="BASIC"
+											minFrameworkVersion="0.5.0" maxFrameworkVersion="1.0.0"
+											minUpgradableVersion="0.0.0.103" certificationLevel="BASIC"
 											pluginAccessRight="ApplicationHealthPluginRight">
 
 											<PluginConfiguration>
