@@ -15,5 +15,6 @@ public class Constants {
 	public final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	
 	public final static String CUSTOM_CONFIG = "applicationHealthPluginConfig";
+	public final static String CUSTOM_OPTION_STATUS_CHANGE_RULE = "statusChangeRule";
 
 }

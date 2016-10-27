@@ -25,6 +25,7 @@ import sailpoint.object.Attributes;
 import sailpoint.object.Custom;
 import sailpoint.object.IntegrationConfig;
 import sailpoint.object.QueryOptions;
+import sailpoint.object.Rule;
 import sailpoint.plugin.applicationhealthplugin.Constants;
 import sailpoint.plugin.server.AbstractPluginBackgroundService;
 import sailpoint.plugin.server.PluginEnvironment;
@@ -43,14 +44,55 @@ public class ApplicationHealthService extends AbstractPluginBackgroundService {
 	}
 	
 	/**
-	 * 
+	 * Check whether a rule has been configured to perform actions on a status change. If so, execute the rule.
 	 * @param objectType
 	 * @param name
 	 * @param oldStatus
 	 * @param newStatus
 	 */
-	private void statusChangeAction(String objectType, String name, String oldStatus, String newStatus) {
-		log.debug(String.format("Enter: statusChangeAction(%s, %s, %s, %s)", objectType, name, oldStatus, newStatus));
+	private void statusChangeAction(SailPointContext context, String objectType, String name, String oldStatus, String newStatus, String message) {
+		log.debug(String.format("Enter: statusChangeAction(%s, %s, %s, %s, %s, %s)", context, objectType, name, oldStatus, newStatus, message));
+		try {
+			Custom custom = context.getObjectByName(Custom.class, Constants.CUSTOM_CONFIG);
+			if (custom != null) {
+				Attributes<String, Object> attributes = custom.getAttributes();
+				if (attributes != null) {
+					String ruleName = attributes.getString(Constants.CUSTOM_OPTION_STATUS_CHANGE_RULE);
+					if (ruleName != null) {
+						Rule rule = context.getObjectByName(Rule.class, ruleName);
+						if (rule != null) {
+							Map<String, Object> inputs = new HashMap<String, Object>();
+							inputs.put("log", log);
+							inputs.put("context", context);
+							inputs.put("config", custom);
+							inputs.put("objectType", objectType);
+							inputs.put("objectName", name);
+							inputs.put("oldStatus", oldStatus);
+							inputs.put("newStatus", newStatus);
+							inputs.put("message", message);
+							Application application = null;
+							if ("Application".equals(objectType)) {
+								application = context.getObjectByName(Application.class, name);
+							}
+							IntegrationConfig integrationConfig = null;
+							if ("Integration".equals(objectType)) {
+								integrationConfig = context.getObjectByName(IntegrationConfig.class, name);
+							}
+							inputs.put("application", application);
+							inputs.put("integration", integrationConfig);
+							context.runRule(rule, inputs);
+						} else {
+							log.error(String.format("Rule '%s' not found.", ruleName));
+						}
+					}
+				}
+			} else {
+				log.error("Unable to retrieve configuration");
+			}
+		} catch (GeneralException e) {
+			log.error(e);
+		}
+
 		// TODO - placeholder
 	}
 
@@ -89,6 +131,14 @@ public class ApplicationHealthService extends AbstractPluginBackgroundService {
 		return applications;
 	}
 
+	/**
+	 * 
+	 * @param context
+	 * @param objectType
+	 * @param map
+	 * @return
+	 * @throws GeneralException
+	 */
 	private Map<String, String> checkExclusions(SailPointContext context, String objectType, Map<String, String> map) throws GeneralException {
 		log.debug(String.format("Enter: checkExclusions(%s, %s, %s)", context.toString(), objectType, map.toString()));
 		Custom custom = context.getObjectByName(Custom.class, Constants.CUSTOM_CONFIG);
@@ -455,11 +505,11 @@ public class ApplicationHealthService extends AbstractPluginBackgroundService {
 	 * @throws GeneralException
 	 * @throws SQLException
 	 */
-	private void setIntegrationStatus(String name, String id, String status, String message, Date timestamp) throws GeneralException, SQLException {
+	private void setIntegrationStatus(SailPointContext context, String name, String id, String status, String message, Date timestamp) throws GeneralException, SQLException {
 		log.debug(String.format("Enter: setIntegrationStatus(%s, %s, %s, %s, %s)", name, id, status, message, (timestamp != null) ? timestamp.toString() : "null"));
 		String oldStatus = getCurrentStatus(Constants.TYPE_INTEGRATION, name);
 		if (!Util.nullSafeEq(oldStatus, status)) {
-			statusChangeAction(Constants.TYPE_INTEGRATION, name, oldStatus, status);
+			statusChangeAction(context, Constants.TYPE_INTEGRATION, name, oldStatus, status, message);
 		}
 		if (integrationExists(name)) {
 			updateIntegrationStatus(name, id, status, message, timestamp);
@@ -478,11 +528,11 @@ public class ApplicationHealthService extends AbstractPluginBackgroundService {
 	 * @throws GeneralException
 	 * @throws SQLException
 	 */
-	private void setApplicationStatus(String name, String id, String status, String message, Date timestamp) throws GeneralException, SQLException {
+	private void setApplicationStatus(SailPointContext context, String name, String id, String status, String message, Date timestamp) throws GeneralException, SQLException {
 		log.debug(String.format("Enter: setApplicationStatus(%s, %s, %s, %s, %s)", name, id, status, message, (timestamp != null) ? timestamp.toString() : "null"));
 		String oldStatus = getCurrentStatus(Constants.TYPE_APPLICATION, name);
 		if (!Util.nullSafeEq(oldStatus, status)) {
-			statusChangeAction(Constants.TYPE_APPLICATION, name, oldStatus, status);
+			statusChangeAction(context, Constants.TYPE_APPLICATION, name, oldStatus, status, message);
 		}
 		if (applicationExists(name)) {
 			updateApplicationStatus(name, id, status, message, timestamp);
@@ -519,12 +569,12 @@ public class ApplicationHealthService extends AbstractPluginBackgroundService {
 					message = "Ping failed";
 				}
 				log.error(message);
-				setIntegrationStatus(name, id, Constants.STATUS_ERROR, message, new Date());
+				setIntegrationStatus(context, name, id, Constants.STATUS_ERROR, message, new Date());
 				return;
 			}
-			setIntegrationStatus(name, id, Constants.STATUS_OK, null, new Date());
+			setIntegrationStatus(context, name, id, Constants.STATUS_OK, null, new Date());
 		} else {
-			setIntegrationStatus(name, id, Constants.STATUS_ERROR, "IntegrationConfig not found", null);
+			setIntegrationStatus(context, name, id, Constants.STATUS_ERROR, "IntegrationConfig not found", null);
 		}
 	}
 
@@ -550,12 +600,12 @@ public class ApplicationHealthService extends AbstractPluginBackgroundService {
 				connector.testConfiguration();
 			} catch (Exception e) {
 				log.error(e.getMessage());
-				setApplicationStatus(name, id, Constants.STATUS_ERROR, e.getMessage(), new Date());
+				setApplicationStatus(context, name, id, Constants.STATUS_ERROR, e.getMessage(), new Date());
 				return;
 			}
-			setApplicationStatus(name, id, Constants.STATUS_OK, null, new Date());
+			setApplicationStatus(context, name, id, Constants.STATUS_OK, null, new Date());
 		} else {
-			setApplicationStatus(name, id, Constants.STATUS_ERROR, "Application not found", null);
+			setApplicationStatus(context, name, id, Constants.STATUS_ERROR, "Application not found", null);
 		}
 	}
 

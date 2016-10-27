@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Application Health Example Rule">
+  <Description>This rule is used to perform actions whenever the connection status of an application or integration changes.</Description>
+  <Signature>
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="config">
+        <Description>
+          The sailpoint.object.Custom object that contains the plugin's configuration.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          The application whose status has changed.
+        </Description>
+      </Argument>
+      <Argument name="integration">
+        <Description>
+          The application whose status has changed.
+        </Description>
+      </Argument>
+      <Argument name="objectType">
+        <Description>
+          The type of object whose status changes: application or integration.
+        </Description>
+      </Argument>
+      <Argument name="objectName">
+        <Description>
+          The name of object whose status changes: application or integration.
+        </Description>
+      </Argument>
+      <Argument name="oldStatus">
+        <Description>
+          The previous status of the application or integration.
+        </Description>
+      </Argument>
+      <Argument name="newStatus">
+        <Description>
+          The current status of the application or integration.
+        </Description>
+      </Argument>
+      <Argument name="message">
+        <Description>
+          The message reported when the application or integration goes into an error state.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>
+import sailpoint.api.MessageRepository;
+import sailpoint.api.Emailer;
+import sailpoint.api.BasicMessageRepository;
+import sailpoint.object.EmailOptions;
+import sailpoint.object.EmailTemplate;
+  
+// Config
+boolean FEATURE_LOG = true;
+boolean FEATURE_MAIL = true;
+
+// Email
+String emailRecipient = "john.doe@example.com";
+String emailTemplate = "Application Health Example Template";
+
+// Implementation
+
+if (FEATURE_LOG) {
+  log.info("The status of " +objectType + " '" + objectName + "' changed from " + oldStatus + " to " + newStatus + ".");
+}
+  
+if (FEATURE_MAIL) {
+  EmailTemplate template =  context.getObjectByName(EmailTemplate.class, emailTemplate);
+  if (template != null) {
+    template = (EmailTemplate) template.deepCopy(context);
+    if (template != null) {
+      Map args = new HashMap();
+      args.put("application", application);
+      args.put("integration", integration);
+      args.put("objectType", objectType);
+      args.put("objectName", objectName);
+      args.put("oldStatus", oldStatus);
+      args.put("newStatus", newStatus);
+      args.put("message", message);
+      
+      MessageRepository _errorHandler = new BasicMessageRepository();
+      EmailOptions ops = new EmailOptions(emailRecipient, args);
+      new Emailer(context, _errorHandler).sendEmailNotification(template , ops);
+    }  
+  }
+}
+  </Source>
+</Rule>

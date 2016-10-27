@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="Application Health Example Template">
+  <Description>
+      Email template to be sent on an application or integration health status change.
+    </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="application">
+        <Description>
+          The application whose status has changed.
+        </Description>
+      </Argument>
+      <Argument name="integration">
+        <Description>
+          The application whose status has changed.
+        </Description>
+      </Argument>
+      <Argument name="objectType">
+        <Description>
+          The type of object whose status changes: application or integration.
+        </Description>
+      </Argument>
+      <Argument name="objectName">
+        <Description>
+          The name of object whose status changes: application or integration.
+        </Description>
+      </Argument>
+      <Argument name="oldStatus">
+        <Description>
+          The previous status of the application or integration.
+        </Description>
+      </Argument>
+      <Argument name="newStatus">
+        <Description>
+          The current status of the application or integration.
+        </Description>
+      </Argument>
+      <Argument name="message">
+        <Description>
+          The message reported when the application or integration goes into an error state.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Subject>$objectType health status change for $objectName: $newStatus</Subject>
+  <Body>The $objectType.toLowerCase() named "$objectName" has changed status.
+
+#if( $newStatus == "ERROR" )
+  The health check for the $objectType.toLowerCase() has failed.
+  
+  #if( $message ) The error message reported is: $message #{end}
+#else
+  The health check for the $objectType.toLowerCase() is restored.  
+#end
+</Body>
+</EmailTemplate>

@@ -1,8 +1,5 @@
 <!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
 <sailpoint>
-  <ImportAction name='include' value='{plugin_root}/installation/Permissions.xml'/>
-  <ImportAction name='include' value='{plugin_root}/installation/Custom.xml'/>
-  <ImportAction name='include' value='{plugin_root}/installation/Services.xml'/>
   <ImportAction name='include' value='{plugin_root}/installation/EmailTemplate.xml'/>
   <ImportAction name='include' value='{plugin_root}/installation/Rule.xml'/>
 </sailpoint>

@@ -13,6 +13,7 @@
         </value>
          -->
       </entry>
+      
       <entry key="ignoredIntegrations">
         <!-- 
         <value>
@@ -22,6 +23,9 @@
         </value>
          -->
       </entry>
+      
+      <entry key="statusChangeRule"/>
+      <!--  value should contain rule to send out notification -->
     </Map>
   </Attributes>
 </Custom>
