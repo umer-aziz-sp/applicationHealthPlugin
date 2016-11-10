@@ -24,7 +24,7 @@
          -->
       </entry>
       
-      <entry key="statusChangeRule"/>
+      <entry key="statusChangeRule" value="Application Health Example Rule"/>
       <!--  value should contain rule to send out notification -->
     </Map>
   </Attributes>
